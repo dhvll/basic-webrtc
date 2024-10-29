@@ -15,10 +15,30 @@ export const Sender = () => {
     }
   }, [])
 
+  const startSendingVideo = async () => {
+    if (!socket) {
+      alert("Socket not found")
+      return
+    }
+    const pc = new RTCPeerConnection()
+    const offer = await pc.createOffer()
+    await pc.setLocalDescription(offer)
+    socket?.send(
+      JSON.stringify({ type: "createOffer", sdp: pc.localDescription })
+    )
+
+    socket.onmessage = async (event) => {
+      const data = JSON.parse(event.data)
+      if (data.type === "createOffer") {
+        await pc.setRemoteDescription(data.sdp)
+      }
+    }
+  }
+
   return (
     <div>
       Sender
-      <button> Send data </button>
+      <button onClick={startSendingVideo}> Send data </button>
     </div>
   )
 }
