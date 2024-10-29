@@ -52,6 +52,11 @@ export const Sender = () => {
       }
     }
 
+    // for sharing screen
+    // const stream = await navigator.mediaDevices.getDisplayMedia({
+    //   video: true,
+    //   audio: false,
+    // })
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false,
