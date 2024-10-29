@@ -1,5 +1,7 @@
 import { useEffect } from "react"
+
 export const Receiver = () => {
+  // const videoRef = useRef<HTMLVideoElement>(null)
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8080")
     socket.onopen = () => {
@@ -29,9 +31,14 @@ export const Receiver = () => {
           }
         }
 
-        pc.ontrack = (track) => {
-          console.log(track)
+        pc.ontrack = (event) => {
+          const video = document.createElement("video")
+          document.body.appendChild(video)
+          console.log(event)
+          video.srcObject = new MediaStream([event.track])
+          video.play()
         }
+
         const answer = await pc.createAnswer()
         await pc.setLocalDescription(answer)
         socket.send(
